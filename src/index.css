@@ -1,1 +1,82 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px); }
+  
+  /* Sci-Fi HUD Animations for Dashboard */
+  .animate-data-glitch { animation: dataGlitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+  .animate-engine-roar { animation: engineShake 0.08s ease-in-out infinite alternate; }
+  .animate-blast-wave { animation: blastWave 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+  .animate-hud-scan { animation: scanline 3s linear infinite; }
+  
+  /* NEW: Realistic VTVL Landing Cycle Animations */
+  .animate-landing-cycle { animation: landingCycle 16s linear infinite; }
+  .animate-suicide-burn { animation: suicideBurn 16s linear infinite; origin: top; }
+  .animate-plume-glow { animation: plumeGlow 16s linear infinite; }
+  .animate-star-fall { animation: starFall linear infinite; }
+  
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+}
+
+/* Original Dashboard Keyframes */
+@keyframes fadeUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes dataGlitch { 0% { opacity: 0; filter: contrast(200%) brightness(150%); transform: skewX(10deg) scale(0.98); } 20% { opacity: 1; transform: skewX(-10deg) translate(2px, 0); } 40% { filter: contrast(100%) brightness(100%); transform: skewX(5deg) translate(-2px, 0); } 60% { transform: skewX(-2deg); } 80% { transform: skewX(1deg); } 100% { transform: skewX(0) translate(0, 0); } }
+@keyframes engineShake { 0% { transform: translate(0, 0); } 100% { transform: translate(0.5px, 1px); } }
+@keyframes blastWave { 0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.6); opacity: 1; } 100% { box-shadow: 0 0 0 40px rgba(6, 182, 212, 0); opacity: 0; } }
+@keyframes scanline { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 0.5; } 90% { opacity: 0.5; } 100% { transform: translateY(800%); opacity: 0; } }
+
+/* NEW: Heavy Landing Physics */
+@keyframes landingCycle {
+  0%   { transform: translateY(-150vh); } /* High up in atmosphere */
+  25%  { transform: translateY(-60vh); }  /* Free fall */
+  35%  { transform: translateY(-10vh); }  /* Heavy breaking */
+  40%  { transform: translateY(0); }      /* Soft touch down */
+  60%  { transform: translateY(0); }      /* Resting on pad */
+  65%  { transform: translateY(0); }      /* Spooling engines */
+  75%  { transform: translateY(-20vh); }  /* Heavy lift */
+  90%  { transform: translateY(-100vh); } /* Speeding up */
+  100% { transform: translateY(-150vh); } /* Exited atmosphere */
+}
+
+/* NEW: Dynamic Engine Thrust Scaling */
+@keyframes suicideBurn {
+  0%   { transform: scaleY(0); opacity: 0; } 
+  25%  { transform: scaleY(0); opacity: 0; }
+  26%  { transform: scaleY(1.8); opacity: 1; }   /* Sudden ignition for landing */
+  35%  { transform: scaleY(0.8); opacity: 1; }   /* Throttling down */
+  40%  { transform: scaleY(0); opacity: 0; }     /* Touchdown cut */
+  60%  { transform: scaleY(0); opacity: 0; }     /* Resting */
+  62%  { transform: scaleY(1.0); opacity: 0.8; } /* Pre-burn spool */
+  65%  { transform: scaleY(2.5); opacity: 1; }   /* Liftoff full thrust */
+  90%  { transform: scaleY(1.5); opacity: 1; }   /* Sustained ascent */
+  100% { transform: scaleY(1.5); opacity: 1; }   
+}
+
+/* NEW: Environmental Pad Lighting */
+@keyframes plumeGlow {
+  0%   { opacity: 0; filter: brightness(1); }
+  25%  { opacity: 0; filter: brightness(1); }
+  26%  { opacity: 0.8; filter: brightness(2); }
+  35%  { opacity: 0.5; filter: brightness(1); }
+  40%  { opacity: 0; filter: brightness(1); }
+  60%  { opacity: 0; filter: brightness(1); }
+  62%  { opacity: 0.4; filter: brightness(1); }
+  65%  { opacity: 1; filter: brightness(2.5); }
+  85%  { opacity: 0; filter: brightness(1); }    /* Fades as rocket gets high */
+  100% { opacity: 0; filter: brightness(1); }
+}
+
+@keyframes starFall {
+  0% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh) scale(1.5); opacity: 0; }
+}
+
+@layer base {
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #020617; }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+}

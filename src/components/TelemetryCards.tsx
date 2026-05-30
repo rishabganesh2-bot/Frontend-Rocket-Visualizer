@@ -9,16 +9,20 @@ export default function TelemetryCards({ activeRocketId }: TelemetryCardsProps) 
 
   if (!rocket) return null;
 
-  // Max values for calculating progress bar percentages
   const maxPayload = 150000; 
   const maxThrust = 40000;
 
   const payloadPercent = Math.min((rocket.performance.payload_leo_kg / maxPayload) * 100, 100);
   const thrustPercent = Math.min((rocket.performance.thrust_sl_kN / maxThrust) * 100, 100);
 
+  const fleetAvgPayload = rockets.reduce((acc, r) => acc + r.performance.payload_leo_kg, 0) / rockets.length;
+  const payloadDiff = ((rocket.performance.payload_leo_kg - fleetAvgPayload) / fleetAvgPayload) * 100;
+  
+  const fleetAvgCost = rockets.reduce((acc, r) => acc + r.economics.cost_per_launch_usd, 0) / rockets.length;
+  const costDiff = ((rocket.economics.cost_per_launch_usd - fleetAvgCost) / fleetAvgCost) * 100;
+
   return (
-    <div className="flex flex-col gap-6">
-      {/* Performance Bars */}
+    <div key={activeRocketId} className="flex flex-col gap-6 animate-data-glitch">
       <div>
         <div className="flex justify-between items-baseline mb-2">
           <span className="text-slate-400 text-xs">Payload to LEO</span>
@@ -43,7 +47,6 @@ export default function TelemetryCards({ activeRocketId }: TelemetryCardsProps) 
         </div>
       </div>
 
-      {/* Economics Data */}
       <div className="pt-4 border-t border-white/5">
         <div className="flex justify-between items-baseline mb-2">
           <span className="text-slate-400 text-xs">Launch Cost</span>
@@ -65,7 +68,6 @@ export default function TelemetryCards({ activeRocketId }: TelemetryCardsProps) 
         </div>
       </div>
 
-      {/* Flight Timeline */}
       <div className="pt-4 border-t border-white/5">
         <h3 className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-4">Nominal Timeline</h3>
         <div className="space-y-3 relative before:absolute before:inset-y-0 before:left-[3px] before:w-[1px] before:bg-slate-700/50">
@@ -78,6 +80,19 @@ export default function TelemetryCards({ activeRocketId }: TelemetryCardsProps) 
           ))}
         </div>
       </div>
+
+      <div className="pt-4 border-t border-white/5">
+        <h3 className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-3">Analytics Insight</h3>
+        <div className="bg-slate-900/50 rounded-lg p-3 border border-white/5 space-y-2">
+          <div className="text-xs text-slate-300 leading-relaxed">
+            Capacity is <span className={`font-bold ${payloadDiff >= 0 ? 'text-green-400' : 'text-amber-400'}`}>{Math.abs(payloadDiff).toFixed(0)}% {payloadDiff >= 0 ? 'above' : 'below'}</span> fleet average.
+          </div>
+          <div className="text-xs text-slate-300 leading-relaxed border-t border-white/5 pt-2">
+            Cost is <span className={`font-bold ${costDiff <= 0 ? 'text-green-400' : 'text-amber-400'}`}>{Math.abs(costDiff).toFixed(0)}% {costDiff <= 0 ? 'cheaper' : 'more expensive'}</span> than fleet average.
+          </div>
+        </div>
+      </div>
+      
     </div>
   );
 }

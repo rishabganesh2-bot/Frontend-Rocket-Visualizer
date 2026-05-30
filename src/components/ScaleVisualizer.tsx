@@ -19,16 +19,24 @@ export default function ScaleVisualizer({ activeRocketId, setActiveRocketId }: S
           <div
             key={rocket.id}
             onClick={() => setActiveRocketId(rocket.id)}
-            className="group flex flex-col items-center justify-end cursor-pointer h-full"
+            className="group flex flex-col items-center justify-end cursor-pointer h-full relative"
           >
-            <div className={`text-xs font-mono mb-2 transition-opacity ${isActive ? 'opacity-100 text-cyan-400' : 'opacity-0 group-hover:opacity-100 text-slate-400'}`}>
+            <div className={`text-xs font-mono mb-2 transition-opacity duration-300 ${isActive ? 'opacity-100 text-cyan-400' : 'opacity-0 group-hover:opacity-100 text-slate-400'}`}>
               {rocket.dimensions.height_m}m
             </div>
+            
             <div
               style={{ height: `${heightPercent}%`, width: `${visualWidth}px` }}
-              className={`rounded-t-full transition-all duration-300 ${isActive ? 'bg-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.4)]' : 'bg-slate-600 group-hover:bg-slate-500'}`}
-            />
-            <div className={`mt-4 text-sm font-bold tracking-wide transition-colors ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'}`}>
+              className={`rounded-t-full transition-all duration-300 relative z-10 ${isActive ? 'bg-cyan-500 animate-engine-roar' : 'bg-slate-700 group-hover:bg-slate-500'}`}
+            >
+              <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-full h-12 bg-gradient-to-b from-cyan-400 to-transparent blur-md transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
+              
+              {isActive && (
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-full h-2 rounded-full animate-blast-wave" />
+              )}
+            </div>
+
+            <div className={`mt-4 text-sm font-bold tracking-wide transition-colors duration-300 ${isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-slate-200'}`}>
               {rocket.name}
             </div>
           </div>
